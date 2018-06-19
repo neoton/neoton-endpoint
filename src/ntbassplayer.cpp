@@ -49,7 +49,6 @@ int NTBassPlayer::playUrl()
 {
     if (bassStream != 0)
     {
-        // BASS_Stop();
         BASS_StreamFree(bassStream);
         bassStream = 0;
     }
@@ -64,4 +63,28 @@ int NTBassPlayer::playUrl()
     else
         return BASS_ErrorGetCode();
 
+}
+
+int NTBassPlayer::playTest()
+{
+    if (bassStream != 0)
+    {
+        BASS_StreamFree(bassStream);
+        bassStream = 0;
+    }
+
+    bassStream = (HSTREAM)BASS_MusicLoad(true, &chiptune, 0, SZ_CHIPTUNE, BASS_MUSIC_RAMP, 0);
+
+    if (bassStream == 0)
+        return BASS_ErrorGetCode() + 100;
+
+    if (BASS_ChannelPlay(bassStream, false))
+        return 0;
+    else
+        return BASS_ErrorGetCode() + 200;
+}
+
+int NTBassPlayer::bassStatus()
+{
+    return BASS_ChannelIsActive(bassStream);
 }

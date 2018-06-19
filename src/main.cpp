@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    if (parser.isSet("t"))
+    if (parser.isSet("u"))
     {
-        printf ("Neoton Player: Test Mode\n");
+        printf ("Neoton Player: URL Test Mode\n");
         printf ("Playing %s using default audio device...\n", parser.value("test").toUtf8().data());
 
         NTBassPlayer bass;
@@ -68,6 +68,62 @@ int main(int argc, char *argv[])
             bass.free();
             return 2;
         }
+    }
+        else
+    if (parser.isSet("t"))
+    {
+
+
+
+        printf ("       _   ____________  __________  _   __\n"
+                "      / | / / ____/ __ \\/_  __/ __ \\/ | / /\n"
+                "     /  |/ / __/ / / / / / / / / / /  |/ / \n"
+                "    / /|  / /___/ /_/ / / / / /_/ / /|  /  \n"
+                "   /_/ |_/_____/\\____/ /_/  \\____/_/ |_/ \n\n"
+
+                "This is Neoton, a free public broadcasting system\n"
+                "By Asterleen ~ https://asterleen.com\n"
+                "Neoton is licensed under BSD 3-Clause license.\n\n"
+                "You are using Neoton Endpoint Client. Now we perform\n"
+                "an audio test: how Neoton uses your sound card.\n\n"
+                );
+
+        printf ("Playing music using default audio device...\n");
+
+        NTBassPlayer bass;
+        // bass.setUrl(QUrl(parser.value("t")));
+
+        int currBassStatus;
+        currBassStatus = bass.init();
+
+        if (currBassStatus == 0)
+            printf ("BASS Init OK\n");
+        else
+        {
+            printf ("Could not initialize BASS, code #%d\n", currBassStatus);
+            bass.free();
+            return 1;
+        }
+
+        currBassStatus = bass.playTest();
+
+        if (currBassStatus == 0)
+            printf ("BASS Start OK, you should hear the sound...\n");
+        else
+        {
+            printf ("Could not play music, code #%d\n", currBassStatus);
+            bass.free();
+            return 2;
+        }
+
+        // BASS_ACTIVE_PLAYING = 1 :: bass.h@597
+        while(bass.bassStatus() == 1)
+        {
+            Sleep(100); // decreases CPU usage
+        }
+
+        printf ("Playing finished, bye!\n");
+        return 0;
     }
         else
     {

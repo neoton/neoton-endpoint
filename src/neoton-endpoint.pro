@@ -30,7 +30,8 @@ HEADERS += \
     ntendpoint.h \
     ntlog.h \
     ntbassplayer.h \
-    ntclient.h
+    ntclient.h \
+    chiptune.h
 
 # Neoton Endpoint uses BASS Library by Un4seen Developments.
 # Ah yes, it's not a pure Open Source way... We're sorry.

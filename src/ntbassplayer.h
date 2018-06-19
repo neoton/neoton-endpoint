@@ -7,6 +7,7 @@
 #include <QUrl>
 
 #include "bass.h"
+#include "chiptune.h"
 
 class NTBassPlayer : public QObject
 {
@@ -28,11 +29,13 @@ public:
     void setUrl(QUrl url);
 
     int playUrl();
-    void playTest();
+    int playTest();
+
+    int bassStatus();
 
 private:
-    int channelHandle;
     QUrl streamUrl;
+
     HSTREAM bassStream;
 
 signals:
