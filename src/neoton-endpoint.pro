@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     ntendpoint.cpp \
     ntlog.cpp \
     ntbassplayer.cpp \
-    ntclient.cpp
+    ntclient.cpp \
+    ntauth.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -31,7 +32,8 @@ HEADERS += \
     ntlog.h \
     ntbassplayer.h \
     ntclient.h \
-    chiptune.h
+    chiptune.h \
+    ntauth.h
 
 # Neoton Endpoint uses BASS Library by Un4seen Developments.
 # Ah yes, it's not a pure Open Source way... We're sorry.
