@@ -16,6 +16,8 @@
 #include <QSettings>
 
 #include "ntlog.h"
+#include "ntclient.h"
+#include "ntbassplayer.h"
 
 
 class NTEndpoint : public QObject
@@ -30,11 +32,29 @@ private:
     NTLog::LogLevel logLevel;
 
     int deviceNum;
+    int samplingFrequency;
 
+    NTClient *client;
+    NTBassPlayer *player;
+
+    QString serverAddress;
+    uint serverPort;
+    QString password;
+    int endpointId;
+    bool serverSecure;
+    bool reconnectOnError;
 
     void loadConfig (QString configFile);
 
     void log (QString message, NTLog::LogLevel level = NTLog::LL_DEBUG);
+
+private slots:
+    void onVolumeSet (uint vol);
+    void onStreamParametersSet(QString mount, uint port);
+    void onPlayRequest();
+    void onStopRequest();
+    void onAuthResult(bool res);
+    void onServerDisconnect();
 
 signals:
 

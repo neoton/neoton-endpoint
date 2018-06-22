@@ -45,33 +45,36 @@ void NTBassPlayer::setUrl(QUrl url)
     streamUrl = url;
 }
 
+void NTBassPlayer::setVolume(uint vol)
+{
+    if (vol > 100)
+        return;
+
+    if (bassStream == 0)
+        return;
+
+    BASS_ChannelSetAttribute(bassStream, BASS_ATTRIB_VOL, vol / 100);
+}
+
 int NTBassPlayer::playUrl()
 {
-    if (bassStream != 0)
-    {
-        BASS_StreamFree(bassStream);
-        bassStream = 0;
-    }
+    stop();
 
     bassStream = BASS_StreamCreateURL(streamUrl.toString().toLocal8Bit().data(), 0, BASS_STREAM_AUTOFREE, 0, 0);
 
     if (bassStream == 0)
-        return BASS_ErrorGetCode();
+        return BASS_ErrorGetCode() + 100;
 
     if (BASS_ChannelPlay(bassStream, false))
         return 0;
     else
-        return BASS_ErrorGetCode();
+        return BASS_ErrorGetCode() + 200;
 
 }
 
 int NTBassPlayer::playTest()
 {
-    if (bassStream != 0)
-    {
-        BASS_StreamFree(bassStream);
-        bassStream = 0;
-    }
+    stop();
 
     bassStream = (HSTREAM)BASS_MusicLoad(true, &chiptune, 0, SZ_CHIPTUNE, BASS_MUSIC_RAMP, 0);
 
@@ -82,6 +85,15 @@ int NTBassPlayer::playTest()
         return 0;
     else
         return BASS_ErrorGetCode() + 200;
+}
+
+void NTBassPlayer::stop()
+{
+    if (bassStream != 0)
+    {
+        BASS_StreamFree(bassStream);
+        bassStream = 0;
+    }
 }
 
 int NTBassPlayer::bassStatus()

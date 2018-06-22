@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QAbstractSocket>
 #include <QWebSocket>
 
 #include "ntlog.h"
@@ -13,27 +14,38 @@ class NTClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit NTClient(QObject *parent = 0);
+    explicit NTClient(QString address, uint port, QString password, int endpointId, bool isSecure = false, QObject *parent = 0);
+
+    void start();
+    void stop();
+    void sendCommand (QString command);
 
 private:
     QWebSocket *sock;
 
     QString address;
-    QString password;
     uint port;
+    QString password;
+    int endpointId;
+    bool isSecure;
+
 
     void log (QString message, NTLog::LogLevel level = NTLog::LL_DEBUG, QString component = "clien");
 
 signals:
     void authProcessed (bool);
-    void mountSet (QString);
-    void volumeSet (int);
+    void streamParametersSet (QString, uint);
+    void volumeSet(uint);
     void serverError (int, QString);
     void playRequest();
     void stopRequest();
 
 private slots:
     void processCommand (QString commandLine);
+
+    void onSocketConnect();
+    void onSocketDisconnect();
+    void onSocketError(QAbstractSocket::SocketError error);
 
 public slots:
 };

@@ -27,9 +27,11 @@ public:
     void free();
 
     void setUrl(QUrl url);
+    void setVolume (uint vol);
 
     int playUrl();
     int playTest();
+    void stop();
 
     int bassStatus();
 
