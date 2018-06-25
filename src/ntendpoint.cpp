@@ -29,7 +29,6 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
     log ("Instantiating socket connection...");
 
     client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure);
-    connect (client, SIGNAL(playRequest()), this, SLOT(onPlayRequest()));
     connect (client, SIGNAL(streamParametersSet(QString,uint)), this, SLOT(onStreamParametersSet(QString,uint)));
     connect (client, SIGNAL(volumeSet(uint)), this, SLOT(onVolumeSet(uint)));
     connect (client, SIGNAL(playRequest()), this, SLOT(onPlayRequest()));
@@ -100,7 +99,7 @@ void NTEndpoint::onPlayRequest()
 
 void NTEndpoint::onStopRequest()
 {
-    log ("Play stop requested!");
+    log ("Play stop requested", NTLog::LL_INFO);
     player->stop();
 }
 
