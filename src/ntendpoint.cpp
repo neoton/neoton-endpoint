@@ -12,7 +12,7 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
         exit(-1);
     }
 
-     loadConfig(config);
+    loadConfig(config);
 
     NTLog::instance = new NTLog(logFile, (NTLog::LogLevel)logLevel);
     log ("Welcome to Neoton Endpoint Player!", NTLog::LL_INFO);
@@ -27,7 +27,6 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
     }
 
     log ("Instantiating socket connection...");
-
 
     client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure);
     connect (client, SIGNAL(playRequest()), this, SLOT(onPlayRequest()));
@@ -80,6 +79,9 @@ void NTEndpoint::onStreamParametersSet(QString mount, uint port)
         %4 => server audio port
         %5 => mount point
     */
+
+    log (QString("New stream parameters received: mount %1; port %2").arg(mount).arg(port));
+
     player->setUrl(QUrl(QString("http://endpoint_%1:%2@%3:%4/%5")
                         .arg(endpointId).arg(password).arg(serverAddress)
                         .arg(port).arg(mount)));
@@ -87,11 +89,13 @@ void NTEndpoint::onStreamParametersSet(QString mount, uint port)
 
 void NTEndpoint::onPlayRequest()
 {
-    log ("Play start requested!");
+    log ("Play start requested", NTLog::LL_INFO);
     int playResult = player->playUrl();
 
     if (playResult != 0)
         log (QString("Play was not successful, code %1").arg(playResult), NTLog::LL_WARNING);
+    else
+        log ("Play start OK");
 }
 
 void NTEndpoint::onStopRequest()

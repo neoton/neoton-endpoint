@@ -45,15 +45,18 @@ void NTBassPlayer::setUrl(QUrl url)
     streamUrl = url;
 }
 
-void NTBassPlayer::setVolume(uint vol)
+int NTBassPlayer::setVolume(uint vol)
 {
     if (vol > 100)
-        return;
+        return -2;
 
     if (bassStream == 0)
-        return;
+        return -3;
 
-    BASS_ChannelSetAttribute(bassStream, BASS_ATTRIB_VOL, vol / 100);
+    if (BASS_ChannelSetAttribute(bassStream, BASS_ATTRIB_VOL, vol / 100))
+        return 0;
+    else
+        return BASS_ErrorGetCode();
 }
 
 int NTBassPlayer::playUrl()

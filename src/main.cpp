@@ -8,9 +8,6 @@
 #include "ntendpoint.h"
 #include "ntbassplayer.h"
 
-#include "ntlog.h"
-#include "ntclient.h"
-
 /*
 
     This is Neoton, a public broadcasting system
