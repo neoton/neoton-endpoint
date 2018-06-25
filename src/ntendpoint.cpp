@@ -1,5 +1,13 @@
 #include "ntendpoint.h"
 
+/*
+
+    This is Neoton, a public broadcasting system
+       (c) Asterleen ~ https://asterleen.com
+    Licensed under BSD 3-Clause License, see LICENSE
+
+*/
+
 NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), config(config)
 {
     if (!QFile::exists(config))
@@ -15,9 +23,9 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
     loadConfig(config);
 
     NTLog::instance = new NTLog(logFile, (NTLog::LogLevel)logLevel);
-    log ("Welcome to Neoton Endpoint Player!", NTLog::LL_INFO);
+    log ("Welcome to Neoton Endpoint Client!", NTLog::LL_INFO);
 
-    log ("Setting up audio player...");
+    log ("Setting up audio player...", NTLog::LL_INFO);
     player = new NTBassPlayer(this);
     int playerInitResult = player->init(deviceNum, samplingFrequency);
     if (playerInitResult != 0)
@@ -25,8 +33,10 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
         log (QString("Could not initialize player, code %1").arg(playerInitResult), NTLog::LL_ERROR);
         exit(1);
     }
+        else
+        log ("Player initialized successfully.", NTLog::LL_INFO);
 
-    log ("Instantiating socket connection...");
+    log ("Instantiating socket connection...", NTLog::LL_INFO);
 
     client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure);
     connect (client, SIGNAL(streamParametersSet(QString,uint)), this, SLOT(onStreamParametersSet(QString,uint)));
@@ -66,6 +76,7 @@ void NTEndpoint::log(QString message, NTLog::LogLevel level)
 
 void NTEndpoint::onVolumeSet(uint vol)
 {
+    log (QString("Volume altering command received, setting volume to %1/100").arg(vol));
     player->setVolume(vol);
 }
 
@@ -79,11 +90,15 @@ void NTEndpoint::onStreamParametersSet(QString mount, uint port)
         %5 => mount point
     */
 
-    log (QString("New stream parameters received: mount %1; port %2").arg(mount).arg(port));
+    log (QString("New stream parameters received: mount %1; port %2").arg(mount).arg(port), NTLog::LL_INFO);
 
-    player->setUrl(QUrl(QString("http://endpoint_%1:%2@%3:%4/%5")
-                        .arg(endpointId).arg(password).arg(serverAddress)
-                        .arg(port).arg(mount)));
+    QString url = QString("http://endpoint_%1:%2@%3:%4/%5")
+            .arg(endpointId).arg(password).arg(serverAddress)
+            .arg(port).arg(mount);
+
+    log ("New stream URL will look like this: "+url.replace(password, "<masked_password>"));
+
+    player->setUrl(QUrl(url));
 }
 
 void NTEndpoint::onPlayRequest()

@@ -1,6 +1,14 @@
 #ifndef NTBASSPLAYER_H
 #define NTBASSPLAYER_H
 
+/*
+
+    This is Neoton, a public broadcasting system
+       (c) Asterleen ~ https://asterleen.com
+    Licensed under BSD 3-Clause License, see LICENSE
+
+*/
+
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -27,7 +35,7 @@ public:
     void free();
 
     void setUrl(QUrl url);
-    void setVolume (uint vol);
+    int setVolume(uint vol);
 
     int playUrl();
     int playTest();

@@ -1,10 +1,19 @@
 #ifndef CHIPTUNE_H
 #define CHIPTUNE_H
-/*	File automatically generated with
+/*
+
+    File automatically generated with
         "BIN2C Chiptune Nr.1.xm"
     BIN2C (C) JRVV, ELECSAN S.A., 2016
     This program is freeware
+
+    ***
+
+    We don't know original author of this music.
+    It has been extracted from some crack/keygen software.
+
 */
+
 #define	SZ_CHIPTUNE	43722
 const unsigned char chiptune[SZ_CHIPTUNE] =
 {

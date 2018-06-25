@@ -1,5 +1,13 @@
 #include "ntbassplayer.h"
 
+/*
+
+    This is Neoton, a public broadcasting system
+       (c) Asterleen ~ https://asterleen.com
+    Licensed under BSD 3-Clause License, see LICENSE
+
+*/
+
 NTBassPlayer::NTBassPlayer(QObject *parent) : QObject(parent)
 {
 

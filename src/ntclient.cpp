@@ -1,7 +1,15 @@
 #include "ntclient.h"
 
+/*
+
+    This is Neoton, a public broadcasting system
+       (c) Asterleen ~ https://asterleen.com
+    Licensed under BSD 3-Clause License, see LICENSE
+
+*/
+
 NTClient::NTClient(QString address, uint port, QString password, int endpointId, bool isSecure, QObject *parent) :
-        address(address), port(port), password(password), endpointId(endpointId), isSecure(isSecure), QObject(parent)
+        QObject(parent), address(address), port(port), password(password), endpointId(endpointId), isSecure(isSecure)
 {
     sock = new QWebSocket();
     connect(sock, SIGNAL(connected()), this, SLOT(onSocketConnect()));
