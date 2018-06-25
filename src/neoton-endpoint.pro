@@ -1,7 +1,7 @@
-QT += core network websockets
+QT += core websockets
 QT -= gui
 
-CONFIG += c++11
+# CONFIG += c++11
 
 TARGET = neoton-endpoint
 CONFIG += console

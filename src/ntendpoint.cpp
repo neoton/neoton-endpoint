@@ -12,7 +12,7 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
         exit(-1);
     }
 
-    loadConfig(config);
+     loadConfig(config);
 
     NTLog::instance = new NTLog(logFile, (NTLog::LogLevel)logLevel);
     log ("Welcome to Neoton Endpoint Player!", NTLog::LL_INFO);
@@ -27,7 +27,9 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
     }
 
     log ("Instantiating socket connection...");
-    client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure, this);
+
+
+    client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure);
     connect (client, SIGNAL(playRequest()), this, SLOT(onPlayRequest()));
     connect (client, SIGNAL(streamParametersSet(QString,uint)), this, SLOT(onStreamParametersSet(QString,uint)));
     connect (client, SIGNAL(volumeSet(uint)), this, SLOT(onVolumeSet(uint)));

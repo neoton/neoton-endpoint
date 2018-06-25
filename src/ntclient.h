@@ -14,7 +14,8 @@ class NTClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit NTClient(QString address, uint port, QString password, int endpointId, bool isSecure = false, QObject *parent = 0);
+    explicit NTClient(QString address, uint port, QString password, int endpointId,
+                      bool isSecure = false, QObject *parent = 0);
 
     void start();
     void stop();
@@ -46,6 +47,7 @@ private slots:
     void onSocketConnect();
     void onSocketDisconnect();
     void onSocketError(QAbstractSocket::SocketError error);
+    void onSocketStateChange (QAbstractSocket::SocketState state);
 
 public slots:
 };

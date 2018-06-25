@@ -8,6 +8,7 @@ NTClient::NTClient(QString address, uint port, QString password, int endpointId,
     connect(sock, SIGNAL(disconnected()), this, SLOT(onSocketDisconnect()));
     connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
     connect(sock, SIGNAL(textMessageReceived(QString)), this, SLOT(processCommand(QString)));
+    connect(sock, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onSocketStateChange(QAbstractSocket::SocketState)));
 }
 
 void NTClient::start()
@@ -15,9 +16,9 @@ void NTClient::start()
     if (sock->state() == QAbstractSocket::ConnectedState)
         sock->close();
 
-    QUrl link((isSecure ? "wss://" : "ws://")+address+":"+QString::number(port));
+   QUrl link((isSecure ? "wss://" : "ws://")+address+":"+QString::number(port));
 
-    log ("Connecting to "+link.toString());
+   log ("Connecting to "+link.toString());
 
     sock->open(link);
 }
@@ -157,7 +158,7 @@ void NTClient::processCommand(QString commandLine)
 
 void NTClient::onSocketConnect()
 {
-    log ("Socket is connected, sending initial packet...", NTLog::LL_INFO);
+    log ("Socket is connected, sending initial command...", NTLog::LL_INFO);
     sendCommand("ENDPOINT");
 }
 
@@ -169,4 +170,9 @@ void NTClient::onSocketDisconnect()
 void NTClient::onSocketError(QAbstractSocket::SocketError error)
 {
     log (QString("Socket error #%1").arg(error));
+}
+
+void NTClient::onSocketStateChange(QAbstractSocket::SocketState state)
+{
+    log (QString("Socket changes state to #%1").arg(state));
 }

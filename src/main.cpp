@@ -8,6 +8,9 @@
 #include "ntendpoint.h"
 #include "ntbassplayer.h"
 
+#include "ntlog.h"
+#include "ntclient.h"
+
 /*
 
     This is Neoton, a public broadcasting system
@@ -28,6 +31,7 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption(QStringList() << "t" << "test", "Test the audio playback device with a fancy tracker music", "device"));
     parser.process(a);
 
+
     if (parser.isSet("devices"))
     {
         QList<NTBassPlayer::AudioDevice> devices = NTBassPlayer::listDevices();
@@ -37,6 +41,7 @@ int main(int argc, char *argv[])
 
         return 0;
     }
+
 
     if (parser.isSet("u"))
     {
