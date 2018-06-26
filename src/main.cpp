@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QCommandLineParser parser;
+
+    NTEndpoint *ep;
+
     parser.setApplicationDescription("Neoton Endpoint: a small player for Neoton Broadcasting system");
     parser.addHelpOption();
     parser.addOption(QCommandLineOption(QStringList() << "c" << "config", "Configuration file", "filename"));
@@ -27,7 +30,6 @@ int main(int argc, char *argv[])
     parser.addOption(QCommandLineOption(QStringList() << "u" << "url", "Test the player and audio device with streaming URL", "url"));
     parser.addOption(QCommandLineOption(QStringList() << "t" << "test", "Test the audio playback device with a fancy tracker music", "device"));
     parser.process(a);
-
 
     if (parser.isSet("devices"))
     {
@@ -129,7 +131,7 @@ int main(int argc, char *argv[])
     }
         else
     {
-        NTEndpoint ep(parser.value("config"));
+        ep = new NTEndpoint (parser.value("config"));
         Q_UNUSED(ep);
     }
 

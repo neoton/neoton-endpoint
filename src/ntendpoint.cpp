@@ -39,7 +39,7 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
     log ("Instantiating socket connection...", NTLog::LL_INFO);
 
     client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure);
-    connect (client, SIGNAL(streamParametersSet(QString,uint)), this, SLOT(onStreamParametersSet(QString,uint)));
+    connect (client, &NTClient::streamParametersSet, this, &NTEndpoint::onStreamParametersSet);
     connect (client, SIGNAL(volumeSet(uint)), this, SLOT(onVolumeSet(uint)));
     connect (client, SIGNAL(playRequest()), this, SLOT(onPlayRequest()));
     connect (client, SIGNAL(stopRequest()), this, SLOT(onStopRequest()));
@@ -124,6 +124,10 @@ void NTEndpoint::onAuthResult(bool res)
     {
         log ("Could not authorize on the server, exiting.", NTLog::LL_ERROR);
         exit(2);
+    }
+        else
+    {
+        log ("Auth OK");
     }
 }
 

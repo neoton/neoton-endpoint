@@ -59,7 +59,7 @@ void NTClient::processCommand(QString commandLine)
     QString fulltext = commandLine.mid(commandLine.indexOf("#")+1);
 
     if (commands.count() == 0)
-            return;
+        return;
 
     if (commands[0] == "AUTH")
     {
@@ -127,8 +127,7 @@ void NTClient::processCommand(QString commandLine)
             return;
         }
 
-
-        emit streamParametersSet(commands[1], port);
+        emit streamParametersSet(QString(commands[1]), port);
         return;
     }
 
