@@ -95,7 +95,6 @@ int main(int argc, char *argv[])
         printf ("Playing music using default audio device...\n");
 
         NTBassPlayer bass;
-        // bass.setUrl(QUrl(parser.value("t")));
 
         int currBassStatus;
         currBassStatus = bass.init();
@@ -133,6 +132,8 @@ int main(int argc, char *argv[])
     {
         ep = new NTEndpoint (parser.value("config"));
         Q_UNUSED(ep);
+
+        QObject::connect(&a, &QCoreApplication::aboutToQuit, ep, &NTEndpoint::deleteLater);
     }
 
     return a.exec();
