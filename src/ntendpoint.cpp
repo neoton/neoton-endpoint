@@ -40,9 +40,9 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
 
     client = new NTClient(serverAddress, serverPort, password, endpointId, serverSecure);
     connect (client, &NTClient::streamParametersSet, this, &NTEndpoint::onStreamParametersSet);
-    connect (client, SIGNAL(volumeSet(uint)), this, SLOT(onVolumeSet(uint)));
-    connect (client, SIGNAL(playRequest()), this, SLOT(onPlayRequest()));
-    connect (client, SIGNAL(stopRequest()), this, SLOT(onStopRequest()));
+    connect (client, &NTClient::volumeSet, this, &NTEndpoint::onVolumeSet);
+    connect (client, &NTClient::playRequest, this, &NTEndpoint::onPlayRequest);
+    connect (client, &NTClient::stopRequest, this, &NTEndpoint::onStopRequest);
 
     client->start();
 }
@@ -96,7 +96,10 @@ void NTEndpoint::onStreamParametersSet(QString mount, uint port)
             .arg(endpointId).arg(password).arg(serverAddress)
             .arg(port).arg(mount);
 
-    log ("New stream URL will look like this: "+url.replace(password, "<masked_password>"));
+    QString maskedUrl = url;
+    maskedUrl.replace(password, "<masked_password>");
+
+    log ("New stream URL will look like this: "+maskedUrl);
 
     player->setUrl(QUrl(url));
 }

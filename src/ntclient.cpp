@@ -12,11 +12,13 @@ NTClient::NTClient(QString address, uint port, QString password, int endpointId,
         QObject(parent), address(address), port(port), password(password), endpointId(endpointId), isSecure(isSecure)
 {
     sock = new QWebSocket();
-    connect(sock, SIGNAL(connected()), this, SLOT(onSocketConnect()));
-    connect(sock, SIGNAL(disconnected()), this, SLOT(onSocketDisconnect()));
-    connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
-    connect(sock, SIGNAL(textMessageReceived(QString)), this, SLOT(processCommand(QString)));
-    connect(sock, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onSocketStateChange(QAbstractSocket::SocketState)));
+    connect(sock, &QWebSocket::connected, this, &NTClient::onSocketConnect);
+    connect(sock, &QWebSocket::disconnected, this, &NTClient::onSocketDisconnect);
+    connect(sock, &QWebSocket::textMessageReceived, this, &NTClient::processCommand);
+    connect(sock, &QWebSocket::stateChanged, this, &NTClient::onSocketStateChange);
+
+    // oh god... https://forum.qt.io/topic/54264/connect-unresolved-overloaded-function-type
+    connect(sock, static_cast<void (QWebSocket::*) (QAbstractSocket::SocketError)>(&QWebSocket::error), this, &NTClient::onSocketError);
 }
 
 void NTClient::start()
