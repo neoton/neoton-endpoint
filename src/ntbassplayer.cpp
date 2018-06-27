@@ -15,25 +15,50 @@ NTBassPlayer::NTBassPlayer(QObject *parent) : QObject(parent)
 
 QList<NTBassPlayer::AudioDevice> NTBassPlayer::listDevices()
 {
-    BASS_DEVICEINFO info;
-
     QList<AudioDevice> devicesList;
 
-    for (int i = 0; BASS_GetDeviceInfo(i, &info); i++)
-    {
-        if (info.flags & BASS_DEVICE_ENABLED) // device is enabled
-        {
-            AudioDevice dev;
-            dev.id = i;
-            dev.name = QString::fromLocal8Bit(info.name);
-            dev.driver = QString::fromLocal8Bit(info.driver);
+    int currentDevice = 0;
+    bool devicesLeft = true;
 
-            devicesList.append(dev);
-        }
-    }
+    do {
+        AudioDevice tmp = deviceInfo(currentDevice);
+
+        if (tmp.id > -1)
+            devicesList.append(tmp);
+        else
+            devicesLeft = false;
+
+        currentDevice++;
+    } while (devicesLeft);
 
     return devicesList;
 }
+
+NTBassPlayer::AudioDevice NTBassPlayer::deviceInfo(int device)
+{
+    BASS_DEVICEINFO info;
+
+    AudioDevice dev;
+    dev.id = -1;
+
+    if (device < 0)
+        return dev;
+
+    if (BASS_GetDeviceInfo(device, &info) && (info.flags & BASS_DEVICE_ENABLED))
+    {
+        dev.id = device;
+        dev.name = QString::fromLocal8Bit(info.name);
+        dev.driver = QString::fromLocal8Bit(info.driver);
+    }
+
+    return dev;
+}
+
+int NTBassPlayer::device()
+{
+    return BASS_GetDevice();
+}
+
 
 int NTBassPlayer::init(int device, int samplingRate)
 {

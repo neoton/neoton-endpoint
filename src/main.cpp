@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
 
     if (parser.isSet("devices"))
     {
+        printf ("Listing available audio devices on this machine\n");
+
         QList<NTBassPlayer::AudioDevice> devices = NTBassPlayer::listDevices();
 
         for (int i = 0; i < devices.count(); i++)
@@ -92,21 +94,32 @@ int main(int argc, char *argv[])
                 "an audio test: how Neoton uses your sound card.\n\n"
                 );
 
-        printf ("Playing music using default audio device...\n");
+
+        bool ok;
+        int device = parser.value("t").toInt(&ok);
+
+        if (!ok)
+        {
+            printf ("Bad device ID, run this program with -d key to see all available devices.");
+            return 2;
+        }
 
         NTBassPlayer bass;
 
         int currBassStatus;
-        currBassStatus = bass.init();
+        currBassStatus = bass.init(device);
 
         if (currBassStatus == 0)
-            printf ("BASS Init OK\n");
+            printf ("BASS Library Init OK\n");
         else
         {
-            printf ("Could not initialize BASS, code #%d\n", currBassStatus);
+            printf ("Could not initialize BASS Library, code #%d\n", currBassStatus);
             bass.free();
             return 1;
         }
+
+        NTBassPlayer::AudioDevice deviceInfo = NTBassPlayer::deviceInfo(bass.device());
+        printf ("Playing music using %s\n", deviceInfo.name.toUtf8().data());
 
         currBassStatus = bass.playTest();
 

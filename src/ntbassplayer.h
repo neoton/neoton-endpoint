@@ -30,6 +30,8 @@ public:
     };
 
     static QList<AudioDevice> listDevices();
+    static AudioDevice deviceInfo(int device);
+    int device();
 
     int init(int device = -1, int samplingRate = 48000);
     void free();
