@@ -43,6 +43,7 @@ NTEndpoint::NTEndpoint(QString config, QObject *parent) : QObject(parent), confi
     connect (client, &NTClient::volumeSet, this, &NTEndpoint::onVolumeSet);
     connect (client, &NTClient::playRequest, this, &NTEndpoint::onPlayRequest);
     connect (client, &NTClient::stopRequest, this, &NTEndpoint::onStopRequest);
+    connect (client, &NTClient::disconnected, this, &NTEndpoint::onServerDisconnect);
 
     client->start();
 }
@@ -65,7 +66,7 @@ void NTEndpoint::loadConfig(QString configFile)
     endpointId = settings.value("endpoint_id", -1).toInt();
     password = settings.value("password", "aw_sh_ee_tt").toString();
     serverSecure = settings.value("secure", false).toBool();
-    reconnectOnError = settings.value("reconnect_on_error", true).toBool();
+    reconnectOnLoss = settings.value("reconnect_on_loss", true).toBool();
     settings.endGroup();
 }
 
@@ -136,5 +137,6 @@ void NTEndpoint::onAuthResult(bool res)
 
 void NTEndpoint::onServerDisconnect()
 {
-    // todo: perform reconnect logic
+    if (reconnectOnLoss)
+        client->start();
 }

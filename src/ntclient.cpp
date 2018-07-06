@@ -169,16 +169,19 @@ void NTClient::onSocketConnect()
 {
     log ("Socket is connected, sending initial command...", NTLog::LL_INFO);
     sendCommand("ENDPOINT");
+    emit connected();
 }
 
 void NTClient::onSocketDisconnect()
 {
     log ("Socket disconnected!", NTLog::LL_WARNING);
+    emit disconnected();
 }
 
 void NTClient::onSocketError(QAbstractSocket::SocketError error)
 {
     log (QString("Socket error #%1").arg(error));
+    // emit disconnected(true);
 }
 
 void NTClient::onSocketStateChange(QAbstractSocket::SocketState state)

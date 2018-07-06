@@ -42,7 +42,7 @@ private:
     QString password;
     int endpointId;
     bool serverSecure;
-    bool reconnectOnError;
+    bool reconnectOnLoss;
 
     void loadConfig (QString configFile);
 

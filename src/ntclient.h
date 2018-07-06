@@ -48,6 +48,8 @@ signals:
     void serverError (int, QString);
     void playRequest();
     void stopRequest();
+    void connected();
+    void disconnected();
 
 private slots:
     void processCommand (QString commandLine);
